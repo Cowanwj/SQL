@@ -1,0 +1,31 @@
+#Create a database for a store
+
+CREATE TABLE store (id integer primary key, name text, stock integer, price REAL);
+
+insert into store VALUES
+(1, "Bike", 20, 199.99),
+(2, "tshirt", 50, 19.99),
+(3, "suit", 15, 299.99),
+(4, "Banana", 100, 0.99),
+(5, "board game", 30, 32.49),
+(6, "socks", 80, 9.99),
+(7, "apple", 200, 1.99),
+(8, "battery", 70, 10.99),
+(9, "shoes", 100, 29.99),
+(10, "wood", 30, 16.99),
+(11, "milk", 100, 9.99),
+(12, "chicken", 40, 18.99),
+(13, "beef", 40, 19.99),
+(14, "underwear", 50, 13.99),
+(15, "juice", 65, 7.99);
+
+#Display the database ordered by price
+
+SELECT * FROM store order by price;
+#What is the most expensive item? What is the least expensive item?
+
+select max(price), min(price) from store;
+
+# What is the average price of all items?
+
+SELECT AVG(price) FROM store;
