@@ -22,6 +22,7 @@ insert into store VALUES
 #Display the database ordered by price
 
 SELECT * FROM store order by price;
+
 #What is the most expensive item? What is the least expensive item?
 
 select max(price), min(price) from store;
