@@ -1,0 +1,43 @@
+-- In this SQL code, I am querying a database that is holding Netflix data in order to complete tasks and answer questions relating to the data.
+-- Joining the people and titles_info datasets by the show_id and then display the show name, id, director and type.
+SELECT 
+people.show_id,
+people.director,
+titles.title,
+titles.type
+    FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" AS titles
+    LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_people" people
+    ON titles.show_id=people.show_id
+;
+-- how many movies are there?
+SELECT COUNT(*) 
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+WHERE type='Movie'
+;
+
+--When was the most recent batch of TV shows and/or movies added to the database?
+SELECT MAX(date(date_added))
+    FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+;
+--List all of the TV shows and movies in alphabetical order.
+
+SELECT title
+    FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+    ORDER BY title asc
+;
+
+-- Whow was the director for the movie Bright Star?
+SELECT titles.title, people.director
+    FROM "CharlotteChaze/BreakIntoTech"."netflix_people" people
+    LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+    ON people.show_id=titles.show_id
+    WHERE titles.title='Bright Star'
+;
+    
+--What is the oldest movie in the database and what year was it made?
+SELECT title, release_year
+    FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+    WHERE type='Movie'
+    ORDER BY release_year asc
+    LIMIT 1
+;
