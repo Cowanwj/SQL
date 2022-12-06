@@ -1,0 +1,118 @@
+/* In this SQL I am looking at dataset called chinook which represents a digital media store*/
+/* The dataset includes tables for artists, albums, media tracks, invoices, employees and customers*/
+
+/* #1 Show customers (full name, customer ID, and country) who are not in the US*/
+
+SELECT FirstName, LastName, CustomerId, Country 
+FROM chinook.customers
+WHERE country != 'USA';
+
+/* #2 Show only the customers from Canada*/
+SELECT FirstName, LastName, CustomerId, Country 
+FROM chinook.customers
+WHERE country = 'Canada';
+
+/* #3 Find the invoices of customers who are from Canada (table shows full name, invoice ID, date of invoice, and billing country*/
+
+SELECT c.FirstName, c.LastName, I.InvoiceId, I.InvoiceDate, I.BillingCountry
+FROM chinook.customers AS c
+
+LEFT JOIN chinook.invoices AS I
+ON c.customerid=I.customerid
+
+WHERE I.BillingCountry = 'Canada';
+
+/* #4 Which employees make up the sales team? Agents and manager */
+SELECT FirstName, LastName, Title 
+FROM chinook.employees
+WHERE Title like '%Sales%';
+
+/* #5 Provide a query that shows the invoices associated with each sales agent (full name)*/
+SELECT inv.invoiceid, emp.FirstName, emp.LastName 
+FROM chinook.employees  emp
+
+JOIN chinook.customers  cust
+ON cust.SupportRepId = emp.Employeeid
+
+JOIN chinook.invoices inv
+ON inv.customerid=cust.customerid;
+
+/* #6 How many invoices were there in 2009?*/
+SELECT COUNT(*)
+FROM chinook.invoices
+WHERE invoicedate between '2009-01-01' AND '2009-12-32';
+
+/* #7 What were the total sales in 2009?*/
+SELECT SUM(total) 
+FROM invoices
+WHERE invoicedate between '2009-01-01' AND '2009-12-32';
+
+/* #8 Write a query that includes the track name and artist name with each invoice line ID*/
+
+SELECT T.Name AS Track, Ar.Name AS Artist, I.InvoiceLineId
+FROM chinook.invoice_items I
+
+LEFT JOIN chinook.tracks T
+ON I.TrackId=T.TrackId
+
+INNER JOIN chinook.albums A
+ON A.AlbumId=T.AlbumId
+
+LEFT JOIN chinook.artists Ar
+ON Ar.ArtistId=A.ArtistId;
+
+/* #9 Write a query that shows all of the tracks, album names, media type and genre*/
+SELECT T.Name AS Track, A.Title AS Album, M.Name AS Media, G.Name AS Genre
+FROM chinook.tracks T
+
+JOIN chinook.albums A
+ON T.Albumid=A.Albumid
+
+JOIN chinook.media_types M
+ON T.mediaTypeid=M.mediaTypeid
+
+JOIN chinook.genres G
+ON T.Genreid=G.Genreid;
+
+/* #10 What are the top 5 genres sold worldwide?*/
+SELECT G.Name AS Genre, COUNT(G.Name) AS Track_Count
+FROM chinook.genres G
+
+JOIN chinook.tracks T
+ON G.genreid=T.Genreid
+
+GROUP BY G.Name
+ORDER BY COUNT(G.NAME) DESC
+LIMIT 5;
+
+/* #11 What are the top 5 genres sold in USA?*/
+SELECT G.Name AS Genre, COUNT(G.Name) AS Track_Count
+FROM chinook.genres G
+
+JOIN chinook.tracks T
+ON G.genreid=T.Genreid
+
+JOIN chinook.invoice_items II
+ON II.TrackId=T.TrackID
+
+JOIN chinook.invoices I
+ON I.invoiceid=II.invoiceid
+
+WHERE I.BillingCountry = 'USA'
+GROUP BY G.Name
+ORDER BY COUNT(G.NAME) DESC
+LIMIT 5;
+
+/*  #12 Show the sales made by each sales agent*/
+SELECT emp.FirstName, emp.LastName,
+ROUND(SUM(Inv.Total), 2) as Total_Sales 
+FROM chinook.Employees emp
+
+JOIN chinook.Customers cust 
+ON cust.SupportRepId = emp.EmployeeId
+
+JOIN chinook.Invoices Inv 
+ON Inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent' 
+GROUP BY emp.FirstName;
